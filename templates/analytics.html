@@ -1,0 +1,151 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="description" content="Analytics Dashboard for SmartStock AI">
+    <meta name="author" content="Your Name">
+    <title>Analytics</title>
+    <link rel="stylesheet" href="{{ url_for('static',filename='css/style.css')}}">
+    <link href='https://unpkg.com/boxicons@2.1.4/css/boxicons.min.css' rel='stylesheet'>
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    <script type="text/javascript" src="{{ url_for('static', filename='script/script.js')}}" defer></script>
+</head>
+
+<body>
+    <div class="sidebar">
+        <a href="#" class="bx logo">
+            <div class="logo-name">
+                <span>MindMapr </span>AI
+            </div>
+        </a>
+        <ul class="side-menu">
+            <li>
+                <form action="{{ url_for('home') }}" method="POST" style="display: inline;">
+                    <button type="submit" style="all: unset; cursor: pointer;">
+                        <i class='bx bxs-dashboard'></i>InsightHub
+                    </button>
+                </form>
+            </li>
+            <li>
+                <form action="{{ url_for('live') }}" method="POST" style="display: inline;">
+                    <button type="submit" style="all: unset; cursor: pointer;">
+                        <i class='bx bx-video'></i>Live Monitoring
+                    </button>
+                </form>
+            </li>
+            <li>
+                <form action="{{ url_for('eeg') }}" method="POST" style="display: inline;">
+                    <button type="submit" style="all: unset; cursor: pointer;">
+                        <i class='bx bx-video'></i>EEG Monitoring
+                    </button>
+                </form>
+            </li>
+            <li class="active"><a href="{{ url_for('Analytics') }}"><i class='bx bx-bar-chart'></i>Analytics</a></li>
+            <li><form action="{{ url_for('Messages') }}" method="POST" style="display: inline;"><button type="submit" style="all: unset; cursor: pointer;"><i class='bx bx-message-square-dots'></i>Messages</button></form></li>
+            <li><form action="{{ url_for('Settings') }}" method="POST" style="display: inline;"><button type="submit" style="all: unset; cursor: pointer;"><i class='bx bx-cog'></i>Settings</button></form></li>
+        </ul>
+        <ul class="side-menu">
+            <li><a href="#" class="logout"><i class='bx bx-log-out'></i> Logout</a></li>
+        </ul>
+    </div>
+
+    <div class="content">
+        <nav>
+            <i class='bx bx-menu'></i>
+            <form action="#">
+                <div class="form-input">
+                    <input type="search" placeholder="Search here">
+                    <button class="search-btn" type="submit"><i class='bx bx-search'></i></button>
+                </div>
+            </form>
+            <input type="checkbox" id="theme-toggle" hidden>
+            <label for="theme-toggle" class="theme-toggle"></label>
+            <a href="#" class="notify">
+                <i class='bx bx-bell'></i>
+                <span class="count">12</span>
+            </a>
+            <a href="#" class="profile">
+                <img src="../static/assets/user-profile-icon.png" alt="Profile Icon">
+            </a>
+        </nav>
+
+        <main>
+            <div class="header">
+                <div class="left">
+                    <h1 id="dash">Analytics</h1>
+                    <ul class="breadcrumb">
+                        <li><a href="#">Analytics</a></li>
+                        <li> / </li>
+                        <li><a href="#" class="active">Class</a></li>
+                    </ul>
+                </div>
+            </div>
+
+            <div>
+                <h2>Focus vs Distraction</h2>
+                <img src="{{ focus_chart_url }}" alt="Focus vs Distraction" />
+            </div>
+        
+            <div>
+                <h2>Attendance for Today</h2>
+                <img src="{{ attendance_chart_url }}" alt="Attendance Chart" />
+            </div>
+        
+            <div>
+                <h2>Class Engagement by Student</h2>
+                <img src="{{ class_engagement_chart_url }}" alt="Class Engagement by Student" />
+            </div>
+        </main>
+    </div>
+
+    <!-- <script>
+        
+            // Pass the dynamic data from Flask to JavaScript
+            const students = JSON.parse('{{ students | tojson | safe }}');
+    
+            // Extract data for the charts
+            const focusData = {
+                labels: ["Focused Time", "Distracted Time"],
+                datasets: [{
+                    data: [
+                        students.reduce((sum, student) => sum + student.focused_time, 0),
+                        students.reduce((sum, student) => sum + student.distracted_time, 0)
+                    ],
+                    backgroundColor: ["#4CAF50", "#FF5733"]
+                }]
+            };
+    
+            const engagementData = {
+                labels: students.map(student => student.date), // Use dates from the CSV
+                datasets: [{
+                    label: "Focused Time",
+                    data: students.map(student => student.focused_time),
+                    borderColor: "#4CAF50",
+                    fill: false
+                }, {
+                    label: "Distracted Time",
+                    data: students.map(student => student.distracted_time),
+                    borderColor: "#FF5733",
+                    fill: false
+                }]
+            };
+    
+            const classEngagementData = {
+                labels: students.map(student => student.name), // Use student names from the CSV
+                datasets: [{
+                    label: "Total Focused Time",
+                    data: students.map(student => student.focused_time),
+                    backgroundColor: "#4CAF50"
+                }]
+            };
+    
+            // Render the charts
+            new Chart(document.getElementById("focusChart"), { type: "doughnut", data: focusData });
+            new Chart(document.getElementById("engagementChart"), { type: "line", data: engagementData });
+            new Chart(document.getElementById("classEngagementChart"), { type: "bar", data: classEngagementData });
+        
+    </script> -->
+</body>
+</html>
