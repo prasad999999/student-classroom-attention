@@ -70,59 +70,71 @@ def Analytics():
 
 
 def generate_focus_vs_distraction_chart(data, date_columns):
-    # Calculate total focused and distracted time
+    """Generate a standardized doughnut chart for Focus vs Distraction."""
+
     total_focused_time = data['t_focused'].sum()
     total_distracted_time = data['t_distracted'].sum()
 
-    # Create a doughnut chart
     labels = ['Focused Time', 'Distracted Time']
     sizes = [total_focused_time, total_distracted_time]
     colors = ['#4CAF50', '#FF5733']
 
-    fig, ax = plt.subplots(figsize=(6, 6))
-    ax.pie(sizes, labels=labels, colors=colors, autopct='%1.1f%%', startangle=90, wedgeprops={'width': 0.4})
-    ax.axis('equal')  # Equal aspect ratio ensures that pie is drawn as a circle
-    ax.set_title("Focus vs Distraction")
-    
-    # Save the chart
-    fig.savefig(os.path.join(app.config['GRAPH_DIR'], 'focus_vs_distraction.png'))
+    fig, ax = plt.subplots(figsize=(6,6), dpi=300)  # Fixed size & DPI
+    fig.set_size_inches(6, 6)  # Explicitly set size
+
+    wedges, texts, autotexts = ax.pie(
+        sizes, labels=labels, colors=colors, autopct='%1.1f%%',
+        startangle=90, wedgeprops={'width': 0.4}, pctdistance=0.85, textprops={'fontsize': 14}
+    )
+
+    ax.set_aspect('equal')  # Ensures perfect circular shape
+    ax.set_title("Focus vs Distraction", fontsize=16, fontweight='bold')
+
+    os.makedirs(app.config['GRAPH_DIR'], exist_ok=True)
+    fig.savefig(os.path.join(app.config['GRAPH_DIR'], 'focus_vs_distraction.png'), 
+                bbox_inches='tight', pad_inches=0.1, dpi=300)  # Ensures identical output size
+
     plt.close(fig)
 
 
-
 def generate_attendance_chart(present_count, absent_count):
-    """Generate a pie chart for student attendance with updated colors and count display."""
+    """Generate a smaller pie chart for student attendance with updated colors and count display."""
 
     labels = [
-        f'Present: {present_count} ({present_count / (present_count + absent_count) * 100:.1f}%)',
-        f'Absent: {absent_count} ({absent_count / (present_count + absent_count) * 100:.1f}%)'
+        f'Total Present: {present_count} ({present_count / (present_count + absent_count) * 100:.1f}%)',
+        f'Total Absent: {absent_count} ({absent_count / (present_count + absent_count) * 100:.1f}%)'
     ]
     
     sizes = [present_count, absent_count]
     colors = ['#3498db', '#e67e22']  # Blue & Orange for better visibility
 
-    fig, ax = plt.subplots(figsize=(6, 6))
+    fig, ax = plt.subplots(figsize=(4, 4), dpi=200)  # Reduced figure size and slightly lower DPI
+
     wedges, texts, autotexts = ax.pie(
-        sizes, labels=labels, colors=colors, autopct='', startangle=90, wedgeprops={'width': 0.4}
+        sizes, labels=labels, colors=colors, autopct='', startangle=90, 
+        wedgeprops={'width': 0.4}, textprops={'fontsize': 10}  # Reduced text size
     )
     
     # Manually add text labels to show counts inside the pie chart
     for i, autotext in enumerate(autotexts):
         autotext.set_text(f"{sizes[i]}")  # Set count inside the chart
-        autotext.set_color('white')       # Make text readable
-        autotext.set_fontsize(12)
+        autotext.set_color('white')       
+        autotext.set_fontsize(10)  # Reduced font size
 
-    ax.axis('equal')  # Ensure the pie chart is a perfect circle
-    ax.set_title("Attendance Distribution", fontsize=14, fontweight='bold')
+    ax.axis('equal')  # Ensure the pie chart remains circular
+    ax.set_title("Attendance Distribution", fontsize=12, fontweight='bold')  # Reduced title size
 
     # Ensure directory exists before saving
     os.makedirs(app.config['GRAPH_DIR'], exist_ok=True)
 
-    # Save the chart
+    # Save the chart with proper padding and reduced DPI
     chart_path = os.path.join(app.config['GRAPH_DIR'], 'attendance_chart.png')
-    fig.savefig(chart_path, bbox_inches='tight')
+    fig.savefig(chart_path, bbox_inches='tight', pad_inches=0.05, dpi=200)  # Lower dpi for smaller file size
 
     plt.close(fig)
+
+
+
 
 
 
@@ -329,7 +341,7 @@ def download_report():
         combined_report['attention_EEG'].fillna(0, inplace=True)  # Prevent NaN
 
         # Weighted final attention score
-        combined_report['Final Attention (%)'] = 0.6 * combined_report['attention_EEG'] + 0.4 * combined_report['attention_image']
+        combined_report['Final Attention (%)'] = 0.5 * combined_report['attention_EEG'] + 0.5 * combined_report['attention_image']
 
         # Save the final report
         combined_report.to_csv(final_report_path, index=False)

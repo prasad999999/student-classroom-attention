@@ -83,17 +83,39 @@
                 </div>
             </div>
 
-            <div>
+            <style>
+                .chart-container {
+                    display: flex;
+                    flex-direction: column;
+                    align-items: center;
+                    text-align: center;
+                    padding: 20px;
+                }
+            
+                h2 {
+                    margin-bottom: 10px;
+                }
+            
+                img {
+                    max-width: 100%;
+                    height: auto;
+                    display: block;
+                    border-radius: 10px;
+                    padding-bottom: 20px;
+                }
+            </style>
+            
+            <div class="chart-container">
                 <h2>Focus vs Distraction</h2>
                 <img src="{{ focus_chart_url }}" alt="Focus vs Distraction" />
             </div>
-        
-            <div>
+            
+            <div class="chart-container">
                 <h2>Attendance for Today</h2>
                 <img src="{{ attendance_chart_url }}" alt="Attendance Chart" />
             </div>
-        
-            <div>
+            
+            <div class="chart-container">
                 <h2>Class Engagement by Student</h2>
                 <img src="{{ class_engagement_chart_url }}" alt="Class Engagement by Student" />
             </div>
